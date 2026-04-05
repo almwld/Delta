@@ -5,7 +5,7 @@ import '../services/storage/local_storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
-  
+
   bool _isLoggedIn = false;
   bool _isGuest = false;
   bool _isLoading = false;
@@ -42,9 +42,9 @@ class AuthProvider extends ChangeNotifier {
   Future<void> login(String email, String password) async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.login(email, password);
-    
+
     if (result.success) {
       _userData = result.user;
       _isLoggedIn = true;
@@ -53,16 +53,54 @@ class AuthProvider extends ChangeNotifier {
     } else {
       _setError(result.error ?? 'حدث خطأ أثناء تسجيل الدخول');
     }
-    
+
     _setLoading(false);
+  }
+
+  // ✅ دالة verifyOtp المضافة
+  Future<bool> verifyOtp(String phone, String code, String purpose) async {
+    _setLoading(true);
+    _clearError();
+
+    final result = await _authService.verifyOtp(phone, code, purpose);
+
+    _setLoading(false);
+    
+    if (result.success) {
+      if (purpose == 'verification') {
+        _userData = result.user;
+        _isLoggedIn = true;
+        notifyListeners();
+      }
+      return true;
+    } else {
+      _setError(result.error ?? 'رمز التحقق غير صحيح');
+      return false;
+    }
+  }
+
+  // ✅ دالة sendOtp المضافة
+  Future<bool> sendOtp(String phone) async {
+    _setLoading(true);
+    _clearError();
+
+    final result = await _authService.sendOtp(phone);
+
+    _setLoading(false);
+    
+    if (!result.success) {
+      _setError(result.error ?? 'حدث خطأ أثناء إرسال الرمز');
+      return false;
+    }
+    return true;
   }
 
   Future<void> loginAsGuest() async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.loginAsGuest();
-    
+
     if (result.success) {
       _userData = result.user;
       _isLoggedIn = true;
@@ -71,7 +109,7 @@ class AuthProvider extends ChangeNotifier {
     } else {
       _setError(result.error ?? 'حدث خطأ');
     }
-    
+
     _setLoading(false);
   }
 
@@ -84,7 +122,7 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.register(
       fullName: fullName,
       email: email,
@@ -92,7 +130,7 @@ class AuthProvider extends ChangeNotifier {
       password: password,
       avatarUrl: avatarUrl,
     );
-    
+
     if (result.success) {
       _userData = result.user;
       _isLoggedIn = true;
@@ -101,19 +139,16 @@ class AuthProvider extends ChangeNotifier {
     } else {
       _setError(result.error ?? 'حدث خطأ أثناء إنشاء الحساب');
     }
-    
+
     _setLoading(false);
   }
 
   Future<void> logout() async {
     _setLoading(true);
-    
     await _authService.logout();
-    
     _userData = null;
     _isLoggedIn = false;
     _isGuest = false;
-    
     notifyListeners();
     _setLoading(false);
   }
@@ -121,29 +156,29 @@ class AuthProvider extends ChangeNotifier {
   Future<void> forgotPassword(String email) async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.forgotPassword(email);
-    
+
     if (!result.success) {
       _setError(result.error ?? 'حدث خطأ');
     }
-    
+
     _setLoading(false);
   }
 
   Future<void> updateUserData(Map<String, dynamic> data) async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.updateUserData(data);
-    
+
     if (result.success) {
       _userData = result.user;
       notifyListeners();
     } else {
       _setError(result.error ?? 'حدث خطأ');
     }
-    
+
     _setLoading(false);
   }
 
@@ -153,16 +188,16 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.changePassword(
       currentPassword: currentPassword,
       newPassword: newPassword,
     );
-    
+
     if (!result.success) {
       _setError(result.error ?? 'حدث خطأ');
     }
-    
+
     _setLoading(false);
   }
 
@@ -173,29 +208,29 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     _setLoading(true);
     _clearError();
-    
+
     final result = await _authService.verifyIdentity(
       nationalId: nationalId,
       nationality: nationality,
       birthDate: birthDate,
     );
-    
+
     if (result.success) {
       _userData = result.user;
       notifyListeners();
     } else {
       _setError(result.error ?? 'حدث خطأ');
     }
-    
+
     _setLoading(false);
   }
 
   Future<void> upgradeToPro(int level) async {
     _setLoading(true);
     _clearError();
-    
+
     await Future.delayed(const Duration(seconds: 1));
-    
+
     if (_userData != null) {
       _userData = _userData!.copyWith(
         isPro: true,
@@ -205,7 +240,7 @@ class AuthProvider extends ChangeNotifier {
       await LocalStorageService.saveUserData(_userData!.toJson());
       notifyListeners();
     }
-    
+
     _setLoading(false);
   }
 
