@@ -3,8 +3,6 @@ name: Delta App Workflow
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,31 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # 1. تحميل الكود
       - name: Checkout code
         uses: actions/checkout@v4
       
-      # 2. تثبيت Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
+          flutter-version: '3.13.9'  # نسخة مستقرة
+          channel: 'stable'
       
-      # 3. تثبيت التبعيات
-      - name: Install dependencies
+      - name: Clean project
+        run: flutter clean
+      
+      - name: Get dependencies
         run: flutter pub get
       
-      # 4. فحص الكود
-      - name: Analyze code
-        run: flutter analyze
-      
-      # 5. بناء APK
       - name: Build APK
         run: flutter build apk --release
       
-      # 6. رفع الملف الناتج
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: delta-app-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: delta-app
+          path: build/app/outputs/flutter-apk/*.apk
