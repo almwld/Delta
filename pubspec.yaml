@@ -40,13 +40,13 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   path_provider: ^2.1.5
 
-  # Utilities
+  # Utilities (إصدارات متوافقة مع Dart 3.1)
   intl: ^0.18.1
   url_launcher: ^6.2.2
-  share_plus: ^10.1.4
-  package_info_plus: ^5.0.1
+  share_plus: ^7.2.2
+  package_info_plus: ^4.2.0
   device_info_plus: ^9.1.1
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^5.0.2
 
   # Security & Auth
   local_auth: ^2.1.6
@@ -57,7 +57,7 @@ dependencies:
   qr_flutter: ^4.1.0
   mobile_scanner: ^3.5.5
 
-  # Location (بدون flutter_map)
+  # Location (تم إزالة flutter_map)
   geolocator: ^10.1.0
   geocoding: ^2.1.1
 
@@ -128,3 +128,6 @@ flutter:
     - assets/icons/svg/wallet/
     - assets/animations/
     - assets/fonts/
+
+dependency_overrides:
+  meta: 1.10.0
