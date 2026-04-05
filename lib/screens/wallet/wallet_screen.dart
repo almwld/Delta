@@ -36,13 +36,13 @@ class WalletScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        IconButton(
+                        CustomIconButton(
                           icon: const Icon(Icons.history),
                           onPressed: () {
                             // TODO: فتح سجل المعاملات
                           },
                         ),
-                        IconButton(
+                        CustomIconButton(
                           icon: const Icon(Icons.settings_outlined),
                           onPressed: () {
                             // TODO: فتح إعدادات المحفظة

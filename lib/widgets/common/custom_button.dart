@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     if (isText) {
       return TextButton(
         onPressed: isLoading ? null : onPressed,
@@ -173,7 +173,8 @@ class GoldButton extends StatelessWidget {
   }
 }
 
-class IconButton extends StatelessWidget {
+// ✅ تم تغيير اسم الكلاس لتجنب التعارض مع Flutter's IconButton
+class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
   final Color? backgroundColor;
@@ -181,7 +182,7 @@ class IconButton extends StatelessWidget {
   final double size;
   final double iconSize;
 
-  const IconButton({
+  const CustomIconButton({
     super.key,
     required this.icon,
     this.onPressed,
@@ -218,13 +219,13 @@ class IconButton extends StatelessWidget {
   }
 }
 
-class FloatingActionButton extends StatelessWidget {
+class CustomFloatingActionButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final IconData icon;
   final String? label;
   final Color? backgroundColor;
 
-  const FloatingActionButton({
+  const CustomFloatingActionButton({
     super.key,
     this.onPressed,
     this.icon = Icons.add,
@@ -235,20 +236,24 @@ class FloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (label != null) {
-      return FloatingActionButton.extended(
+      return FloatingActionButton(
         onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(label!),
         backgroundColor: backgroundColor ?? AppTheme.goldColor,
-        foregroundColor: Colors.black,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.black),
+            const SizedBox(width: 8),
+            Text(label!, style: const TextStyle(color: Colors.black)),
+          ],
+        ),
       );
     }
 
     return FloatingActionButton(
       onPressed: onPressed,
       backgroundColor: backgroundColor ?? AppTheme.goldColor,
-      foregroundColor: Colors.black,
-      child: Icon(icon),
+      child: Icon(icon, color: Colors.black),
     );
   }
 }
