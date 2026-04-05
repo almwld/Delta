@@ -37,16 +37,12 @@ class WalletScreen extends StatelessWidget {
                     Row(
                       children: [
                         CustomIconButton(
-                          icon: const Icon(Icons.history),
-                          onPressed: () {
-                            // TODO: فتح سجل المعاملات
-                          },
+                          icon: Icons.history,
+                          onPressed: () {},
                         ),
                         CustomIconButton(
-                          icon: const Icon(Icons.settings_outlined),
-                          onPressed: () {
-                            // TODO: فتح إعدادات المحفظة
-                          },
+                          icon: Icons.settings_outlined,
+                          onPressed: () {},
                         ),
                       ],
                     ),
@@ -179,7 +175,7 @@ class WalletScreen extends StatelessWidget {
 
   Widget _buildCurrencyChip(String currency, double amount) {
     final symbol = currency == 'YER' ? 'ر.ي' : currency == 'SAR' ? 'ر.س' : '\$';
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
@@ -241,9 +237,7 @@ class WalletScreen extends StatelessWidget {
                 icon: action['icon'] as IconData,
                 label: action['label'] as String,
                 color: action['color'] as Color,
-                onTap: () {
-                  // TODO: تنفيذ الإجراء
-                },
+                onTap: () {},
               );
             }).toList(),
           ),
@@ -322,12 +316,11 @@ class WalletScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final service = services[index];
               return _buildServiceCard(
+                context: context,
                 icon: service['icon'] as IconData,
                 label: service['label'] as String,
                 color: service['color'] as Color,
-                onTap: () {
-                  // TODO: فتح الخدمة
-                },
+                onTap: () {},
               );
             },
           ),
@@ -337,6 +330,7 @@ class WalletScreen extends StatelessWidget {
   }
 
   Widget _buildServiceCard({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required Color color,
@@ -404,126 +398,29 @@ class WalletScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  // TODO: فتح جميع المعاملات
-                },
+                onPressed: () {},
                 child: const Text('عرض الكل'),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          if (walletProvider.transactions.isEmpty)
-            Center(
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.receipt_long_outlined,
-                    size: 64,
-                    color: isDark ? Colors.grey[700] : Colors.grey[300],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'لا توجد معاملات حتى الآن',
-                    style: TextStyle(
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: walletProvider.transactions.take(5).length,
-              itemBuilder: (context, index) {
-                final transaction = walletProvider.transactions[index];
-                return _buildTransactionItem(transaction);
-              },
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTransactionItem(dynamic transaction) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? AppTheme.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: transaction.statusColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              transaction.typeIcon,
-              color: transaction.statusColor,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
+          Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  transaction.typeText,
-                  style: const TextStyle(
-                    fontFamily: 'Changa',
-                    fontWeight: FontWeight.bold,
-                  ),
+                Icon(
+                  Icons.receipt_long_outlined,
+                  size: 64,
+                  color: isDark ? Colors.grey[700] : Colors.grey[300],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 16),
                 Text(
-                  transaction.description ?? '',
+                  'لا توجد معاملات حتى الآن',
                   style: TextStyle(
-                    fontFamily: 'Tajawal',
-                    fontSize: 12,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                transaction.formattedAmount,
-                style: TextStyle(
-                  fontFamily: 'Changa',
-                  fontWeight: FontWeight.bold,
-                  color: transaction.isIncoming ? AppColors.success : AppColors.error,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                transaction.formattedDate,
-                style: TextStyle(
-                  fontFamily: 'Tajawal',
-                  fontSize: 12,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                ),
-              ),
-            ],
           ),
         ],
       ),
