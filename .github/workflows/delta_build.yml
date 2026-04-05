@@ -1,0 +1,111 @@
+name: Delta Build & Deploy
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🐦 Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.9'
+          channel: 'stable'
+          cache: true
+      
+      - name: 📦 Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            build/
+          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+      
+      - name: 🔧 Clean Project
+        run: flutter clean
+      
+      - name: 📥 Get Dependencies
+        run: flutter pub get
+        continue-on-error: false
+      
+      - name: 🔍 Analyze Code
+        run: flutter analyze || true
+      
+      - name: 🏗️ Build APK
+        run: flutter build apk --release
+      
+      - name: 📤 Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Delta-App-APK
+          path: build/app/outputs/flutter-apk/*.apk
+          retention-days: 30
+      
+      - name: 📤 Upload Build Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build/
+            *.log
+          retention-days: 7
+
+  build-web:
+    runs-on: ubuntu-latest
+    needs: build-android
+    if: success()
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🐦 Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.9'
+          channel: 'stable'
+      
+      - name: 🌐 Enable Web
+        run: flutter config --enable-web
+      
+      - name: 📥 Get Dependencies
+        run: flutter pub get
+      
+      - name: 🏗️ Build Web
+        run: flutter build web --release
+      
+      - name: 📤 Upload Web Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Delta-Web-Build
+          path: build/web
+          retention-days: 30
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build-android, build-web]
+    if: always()
+    
+    steps:
+      - name: ✅ Build Status
+        run: |
+          echo "======================"
+          echo "📱 Delta App Build"
+          echo "======================"
+          echo "✅ Android: ${{ needs.build-android.result }}"
+          echo "✅ Web: ${{ needs.build-web.result }}"
+          echo "======================"
+          echo "🔗 https://github.com/${{ github.repository }}"

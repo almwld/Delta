@@ -10,11 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  
+
   # State Management
   provider: ^6.1.1
   flutter_riverpod: ^2.4.9
-  
+
   # UI Components
   carousel_slider: ^5.1.2
   flutter_animate: ^4.3.0
@@ -27,19 +27,19 @@ dependencies:
   dropdown_button2: ^2.0.0
   flutter_slidable: ^3.0.1
   flutter_staggered_grid_view: ^0.7.0
-  
+
   # Images & Media
   image_picker: ^1.0.7
   cached_network_image: ^3.3.1
   photo_view: ^0.14.0
-  
+
   # Storage & Local Data
   shared_preferences: ^2.2.2
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_secure_storage: ^9.0.0
   path_provider: ^2.1.5
-  
+
   # Utilities
   intl: ^0.18.1
   url_launcher: ^6.2.2
@@ -47,50 +47,48 @@ dependencies:
   package_info_plus: ^5.0.1
   device_info_plus: ^9.1.1
   connectivity_plus: ^6.0.5
-  
+
   # Security & Auth
   local_auth: ^2.1.6
   crypto: ^3.0.3
   encrypt: ^5.0.1
-  
+
   # QR & Barcode
   qr_flutter: ^4.1.0
   mobile_scanner: ^3.5.5
-  
-  # Maps & Location
-  flutter_map: ^7.0.2
-  latlong2: ^0.9.1
+
+  # Location (بدون flutter_map)
   geolocator: ^10.1.0
   geocoding: ^2.1.1
-  
+
   # Backend
   supabase_flutter: ^2.0.0
   dio: ^5.4.0
   retrofit: ^4.0.3
-  
+
   # Notifications
   flutter_local_notifications: ^16.3.0
   firebase_messaging: ^14.7.10
-  
+
   # Environment
   flutter_dotenv: ^5.1.0
-  
+
   # Fonts
   google_fonts: ^6.2.1
-  
+
   # Animation
   lottie: ^3.0.0
-  
+
   # Charts
   syncfusion_flutter_charts: ^24.1.41
-  
+
   # Date Picker
   flutter_datetime_picker_plus: ^2.1.0
-  
+
   # PDF
   pdf: ^3.10.7
   printing: ^5.11.1
-  
+
   # Excel
   excel: ^4.0.2
 
@@ -105,7 +103,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
+
   fonts:
     - family: Changa
       fonts:
@@ -119,7 +117,7 @@ flutter:
           weight: 400
         - asset: assets/fonts/Tajawal-Bold.ttf
           weight: 700
-  
+
   assets:
     - .env
     - assets/images/
